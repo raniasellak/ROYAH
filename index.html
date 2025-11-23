@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROYAH - Visualisez Votre Futur</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gradient-future: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: var(--dark);
+            overflow-x: hidden;
+            background: var(--light);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 2rem;
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i {
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 600;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-future);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--dark);
+            padding: 180px 0 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-future);
+            opacity: 0.1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid var(--secondary);
+            color: #c4b5fd;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero-highlight {
+            color: white;
+            font-size: 4rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero-buttons {
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-future {
+            background: var(--gradient-future);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-future:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-future:hover:before {
+            left: 100%;
+        }
+
+        .btn-future:hover {
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-outline-future {
+            background: transparent;
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline-future:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+            transform: translateY(-5px);
+        }
+
+        .hero-services {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .service-icon-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.8s ease backwards;
+        }
+
+        .service-icon-card:nth-child(1) { animation-delay: 0.2s; }
+        .service-icon-card:nth-child(2) { animation-delay: 0.4s; }
+        .service-icon-card:nth-child(3) { animation-delay: 0.6s; }
+
+        .service-icon-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .service-icon-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .service-icon-card h5 {
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--light);
+            padding: 80px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: var(--gradient-future);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #64748b;
+            margin-bottom: 4rem;
+            line-height: 1.8;
+        }
+
+        /* Service Details Card */
+        .service-detail-card {
+            background: white;
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            transition: all 0.5s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-future);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .service-detail-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-detail-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary);
+        }
+
+        .service-icon-large {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-future);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        .service-detail-card:hover .service-icon-large {
+            transform: rotateY(360deg) scale(1.1);
+        }
+
+        .service-detail-card h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .service-detail-card p {
+            color: #64748b;
+            line-height: 1.9;
+            margin-bottom: 2.5rem;
+            font-size: 1.15rem;
+        }
+
+        .service-detail-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 3rem;
+        }
+
+        .service-detail-card ul li {
+            padding: 1rem 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .service-detail-card ul li:last-child {
+            border-bottom: none;
+        }
+
+        .service-detail-card ul li i {
+            color: var(--success);
+            margin-right: 1rem;
+            font-size: 1.3rem;
+            background: rgba(16, 185, 129, 0.1);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .illustration-box {
+            border-radius: 30px;
+            padding: 4rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .illustration-1 {
+            background: var(--gradient-primary);
+        }
+
+        .illustration-2 {
+            background: var(--gradient-accent);
+        }
+
+        .illustration-3 {
+            background: var(--gradient-future);
+        }
+
+        .illustration-box i {
+            color: white;
+            font-size: 5rem;
+        }
+
+        /* AI Features */
+        .ai-feature-card {
+            background: white;
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            height: 100%;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .ai-feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.15);
+        }
+
+        .ai-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: var(--gradient-future);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .ai-feature-card h4 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .ai-feature-card p {
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        /* Testimonials */
+        .testimonials-bg {
+            background: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonials-bg::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -300px;
+            left: -300px;
+        }
+
+        .testimonial-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 3rem;
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .testimonial-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .testimonial-rating {
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+            line-height: 1.9;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .testimonial-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--gradient-future);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.8rem;
+            margin-right: 1.5rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Creators / réalisateurs avatars row (in Testimonials section) */
+        .creators-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .creator-card {
+            text-align: center;
+            width: 90px;
+        }
+
+        .creator-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: inline-block;
+            border: 3px solid rgba(255,255,255,0.12);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        }
+
+        .creator-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .creator-name {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.85rem;
+            margin-top: 0.45rem;
+        }
+
+        /* Founders section styles */
+        .founders-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .founder-card {
+            text-align: center;
+            width: 160px;
+        }
+
+        .founder-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: inline-block;
+            border: 4px solid rgba(255,255,255,0.12);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        }
+
+        .founder-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .founder-name {
+            color: white;
+            font-weight: 700;
+            margin-top: 0.6rem;
+            font-size: 1rem;
+        }
+
+        .founder-role {
+            color: rgba(255,255,255,0.75);
+            font-size: 0.9rem;
+            margin-top: 0.15rem;
+        }
+
+        @media (max-width: 768px) {
+            .founder-card { width: 120px; }
+            .founder-avatar { width: 100px; height: 100px; }
+            .founder-name { font-size: 0.95rem; }
+        }
+
+        .testimonial-info h5 {
+            margin: 0;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-info p {
+            margin: 0.3rem 0 0 0;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-future);
+            position: relative;
+            overflow: hidden;
+            padding: 100px 0;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -400px;
+            right: -400px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-future);
+        }
+
+        footer h5 {
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        footer a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        footer .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        footer .social-link:hover {
+            background: var(--gradient-future);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1, .hero-highlight {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-services {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 140px 0 80px;
+            }
+
+            .hero h1, .hero-highlight {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-future, .btn-outline-future {
+                width: 100%;
+                text-align: center;
+            }
+
+            .service-detail-card {
+                padding: 2.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .stat-number {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Founders Section -->
+    <section id="fondateurs" class="section testimonials-bg">
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="text-center mb-5">
+                <span class="section-badge" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">Fondateurs</span>
+                <h2 class="section-title" style="color: white;">Les Fondateurs de l'application</h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.7);">L'équipe qui a imaginé et construit ROYAH</p>
+            </div>
+
+            <div class="founders-row" aria-label="Fondateurs">
+                <div class="founder-card">
+                    <div class="founder-avatar">
+                        <img src="assets/founders/rania.jpg" alt="Rania Sellak">
+                    </div>
+                    <div class="founder-name">Rania Sellak</div>
+                    <div class="founder-role">Co-fondatrice • Product</div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-avatar">
+                        <img src="assets/founders/amine.jpg" alt="Amine Karim">
+                    </div>
+                    <div class="founder-name">Amine Karim</div>
+                    <div class="founder-role">Co-fondateur • Tech</div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-avatar">
+                        <img src="assets/founders/fatima.jpg" alt="Fatima Alami">
+                    </div>
+                    <div class="founder-name">Fatima Alami</div>
+                    <div class="founder-role">Co-fondatrice • Design</div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-avatar">
+                        <img src="assets/founders/youssef.jpg" alt="Youssef Idrissi">
+                    </div>
+                    <div class="founder-name">Youssef Idrissi</div>
+                    <div class="founder-role">Co-fondateur • Data</div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-avatar">
+                        <img src="assets/founders/ahmed.jpg" alt="Ahmed Benali">
+                    </div>
+                    <div class="founder-name">Ahmed Benali</div>
+                    <div class="founder-role">Co-fondateur • Ops</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+                <div class="col-lg-6">
+                    <div class="hero-services">
+                        <div class="service-icon-card">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h5>Orientation</h5>
+                        </div>
+                        <div class="service-icon-card">
+                            <i class="fas fa-book"></i>
+                            <h5>Formation</h5>
+                        </div>
+                        <div class="service-icon-card">
+                            <i class="fas fa-briefcase"></i>
+                            <h5>Emploi</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <span class="stat-number">15K+</span>
+                        <div class="stat-label">Futurs Éclairés</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <span class="stat-number">500+</span>
+                        <div class="stat-label">Formations Visionnaires</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <span class="stat-number">2K+</span>
+                        <div class="stat-label">Opportunités Révélées</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orientation Section -->
+    <section id="orientation" class="section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-5 mb-lg-0">
+                    <div class="illustration-box illustration-1">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <span class="section-badge"><i class="fas fa-brain me-2"></i>IA - Service 1</span>
+                    <h2 class="section-title">
+                        Découvrez Votre <span class="gradient-text">Vision</span>
+                    </h2>
+                    <p class="section-subtitle">Trouvez votre voie avec notre test d'orientation alimenté par l'IA, adapté aux étudiants de Bac, Bac+2 et Bac+3.</p>
+                    
+                    <div class="service-detail-card">
+                        <div class="service-icon-large">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Votre Futur Révélé par l'IA</h3>
+                        <p>ROYAH utilise l'intelligence artificielle pour analyser en profondeur votre profil académique, vos aspirations et les tendances du marché.</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Analyse de vos notes et parcours académique</li>
+                            <li><i class="fas fa-check-circle"></i> Cartographie de vos centres d'intérêt</li>
+                            <li><i class="fas fa-check-circle"></i> Évaluation psychométrique de votre profil</li>
+                            <li><i class="fas fa-check-circle"></i> Opportunités du marché analysées en temps réel</li>
+                            <li><i class="fas fa-check-circle"></i> Recommandations IA personnalisées</li>
+                        </ul>
+                        <a href="#" class="btn-future">
+                            <i class="fas fa-clipboard-check"></i> Faire mon test d'orientation IA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formation Section -->
+    <section id="formation" class="section" style="background: var(--light);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="illustration-box illustration-2">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <span class="section-badge"><i class="fas fa-brain me-2"></i>IA - Service 2</span>
+                    <h2 class="section-title">
+                        Sculptez Votre <span class="gradient-text">Excellence</span>
+                    </h2>
+                    <p class="section-subtitle">Développez vos compétences avec l'IA et bénéficiez d'un accompagnement intelligent pour booster votre carrière.</p>
+                    
+                    <div class="service-detail-card">
+                        <div class="service-icon-large">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>L'Académie de Votre Réussite</h3>
+                        <p>ROYAH vous accompagne dans l'acquisition de compétences stratégiques avec un catalogue de formations personnalisées par notre IA.</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Amélioration du CV par IA et experts</li>
+                            <li><i class="fas fa-check-circle"></i> Développement de compétences techniques</li>
+                            <li><i class="fas fa-check-circle"></i> Conseils personnalisés par IA</li>
+                            <li><i class="fas fa-check-circle"></i> Catalogue de formations IA adapté au marché</li>
+                            <li><i class="fas fa-check-circle"></i> Certifications en Digital, Data Science, IA</li>
+                            <li><i class="fas fa-check-circle"></i> Soft Skills et leadership du futur</li>
+                        </ul>
+                        <a href="#" class="btn-future">
+                            <i class="fas fa-graduation-cap"></i> Voir les formations IA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emploi Section -->
+    <section id="emploi" class="section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-5 mb-lg-0">
+                    <div class="illustration-box illustration-3">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <span class="section-badge"><i class="fas fa-brain me-2"></i>IA - Service 3</span>
+                    <h2 class="section-title">
+                        Votre Emploi Idéal <span class="gradient-text">Vous Attend</span>
+                    </h2>
+                    <p class="section-subtitle">Notre IA avancée analyse votre profil et vous propose les offres d'emploi les plus adaptées en temps réel.</p>
+                    
+                    <div class="service-detail-card">
+                        <div class="service-icon-large">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Le Futur de la Recherche d'Emploi</h3>
+                        <p>ROYAH révolutionne votre recherche d'emploi avec un système de matching intelligent basé sur l'IA.</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Upload de votre CV en quelques clics</li>
+                            <li><i class="fas fa-check-circle"></i> Analyse IA avancée de vos compétences</li>
+                            <li><i class="fas fa-check-circle"></i> Matching IA intelligent et prédictif</li>
+                            <li><i class="fas fa-check-circle"></i> Alertes IA personnalisées en temps réel</li>
+                            <li><i class="fas fa-check-circle"></i> Tableau de bord intelligent de suivi</li>
+                            <li><i class="fas fa-check-circle"></i> Coaching IA pour vos entretiens</li>
+                        </ul>
+                        <a href="#" class="btn-future">
+                            <i class="fas fa-search"></i> Voir les emplois recommandés par IA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Features Section -->
+    <section id="ia" class="section" style="background: var(--light);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="section-badge"><i class="fas fa-brain me-2"></i>Intelligence Artificielle</span>
+                <h2 class="section-title">
+                    L'IA au Service de <span class="gradient-text">Votre Réussite</span>
+                </h2>
+                <p class="section-subtitle">Découvrez comment notre technologie d'IA révolutionne l'orientation, la formation et la recherche d'emploi</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="ai-feature-card">
+                        <div class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>Analyse Prédictive</h4>
+                        <p>Notre IA analyse les tendances du marché et prédit les compétences les plus demandées pour vous orienter vers les meilleures opportunités.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ai-feature-card">
+                        <div class="ai-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h4>Matching Intelligent</h4>
+                        <p>Algorithme de matching avancé qui compare votre profil avec des milliers d'offres pour trouver les meilleures correspondances.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ai-feature-card">
+                        <div class="ai-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4>Recommandations Personnalisées</h4>
+                        <p>Système de recommandation basé sur l'apprentissage automatique qui s'adapte à vos préférences et évolue avec vous.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="ai-feature-card">
+                        <div class="ai-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h4>Assistant IA Conversationnel</h4>
+                        <p>Chatbot intelligent disponible 24/7 pour répondre à vos questions et vous guider dans votre parcours professionnel.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="ai-feature-card">
+                        <div class="ai-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Apprentissage Continu</h4>
+                        <p>Notre IA apprend constamment de vos interactions pour améliorer ses recommandations et vous offrir une expérience optimale.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="temoignages" class="section testimonials-bg">
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="text-center mb-5">
+                <span class="section-badge" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;">Témoignages</span>
+                <h2 class="section-title" style="color: white;">
+                    Ils Ont <span class="gradient-text">Visualisé</span> Leur Succès
+                </h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.7);">Découvrez comment ROYAH a transformé leur avenir en réalité tangible</p>
+            </div>
+      
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container text-center" style="position: relative; z-index: 2;">
+            <h2 class="display-4 fw-bold mb-4 text-white">Prêt à Construire Votre Avenir ?</h2>
+            <p class="lead mb-5 text-white" style="opacity: 0.9; font-size: 1.3rem;">Rejoignez des milliers d'étudiants et de professionnels qui ont transformé leur parcours avec ROYAH</p>
+            <a href="#" class="btn-future" style="background: white; color: var(--primary); font-size: 1.1rem;">
+                <i class="fas fa-user-plus me-2"></i>Créer Mon Profil Gratuitement
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4">
+                    <h5 style="background: var(--gradient-future); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 2rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-eye"></i> ROYAH
+                    </h5>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.8; margin-bottom: 2rem;">
+                        Votre partenaire intelligent pour construire un avenir professionnel exceptionnel. Visualisez, développez, réussissez.
+                    </p>
+                    <div>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 style="color: white; margin-bottom: 1.5rem; font-weight: 700;">Services</h6>
+                    <a href="#orientation">Orientation</a>
+                    <a href="#formation">Formation</a>
+                    <a href="#emploi">Emploi</a>
+                    <a href="#ia">Intelligence IA</a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h6 style="color: white; margin-bottom: 1.5rem; font-weight: 700;">Ressources</h6>
+                    <a href="#">Blog & Actualités</a>
+                    <a href="#">Centre d'Aide</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Nous Contacter</a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h6 style="color: white; margin-bottom: 1.5rem; font-weight: 700;">Légal</h6>
+                    <a href="#">Conditions d'Utilisation</a>
+                    <a href="#">Politique de Confidentialité</a>
+                    <a href="#">Mentions Légales</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.5rem;">
+            <div class="text-center" style="color: rgba(255,255,255,0.5);">
+                <p style="margin: 0;">&copy; 2025 ROYAH. Tous droits réservés. Créé avec <span style="color: #ec4899;">♥</span> pour illuminer votre futur.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile menu if open
+                    const navbarCollapse = document.querySelector('.navbar-collapse');
+                    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                    }
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.querySelectorAll('.stat-card, .ai-feature-card, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add parallax effect to hero
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent && scrolled < 800) {
+                heroContent.style.transform = `translateY(${scrolled * 0.15}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
